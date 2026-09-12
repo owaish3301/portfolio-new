@@ -1,0 +1,16 @@
+{
+  "name": "Md Owaish Alam | Full Stack Developer Portfolio",
+  "short_name": "Owaish Alam",
+  "description": "Portfolio of Md Owaish Alam (Owaish / Owais), Full Stack & Frontend Developer specializing in React, TypeScript, and Node.js.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e2df6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

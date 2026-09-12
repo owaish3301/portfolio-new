@@ -1,0 +1,5 @@
+Dummy resume placeholder
+
+Name: Owais
+Role: Frontend Developer
+Portfolio: Resume download will be replaced with the final document later.
