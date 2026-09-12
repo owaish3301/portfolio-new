@@ -67,11 +67,11 @@ export default function SeriesHubClient({ series }: { series: Series }) {
           </p>
 
           {/* Stats Bar */}
-          <div className="flex flex-wrap items-center gap-3.5 sm:gap-5 pt-1 text-xs font-mono text-gray-mid">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-1 text-[11px] font-mono text-gray-light sm:gap-5 sm:text-xs">
             {/* Ongoing status badge (First to capture attention) */}
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-mono font-medium text-accent shrink-0">
+            <div className="inline-flex items-center gap-1.5 font-medium text-gray-mid shrink-0">
               <svg
-                className="h-3.5 w-3.5 text-accent shrink-0"
+                className="h-3 w-3 text-gray-light shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -88,7 +88,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
               <span>{series.status}</span>
             </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex min-w-0 items-center gap-1.5 shrink-0">
               <svg
                 className="h-4 w-4 text-gray-light"
                 xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
               <span>{series.articleCount} articles</span>
             </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex min-w-0 items-center gap-1.5 shrink-0">
               <svg
                 className="h-4 w-4 text-gray-light"
                 xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,9 @@ export default function SeriesHubClient({ series }: { series: Series }) {
             <button
               type="button"
               onClick={toggleBookmark}
-              className={`inline-flex items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-medium transition-all cursor-pointer ${
+              aria-label={bookmarked ? "Bookmarked" : "Bookmark"}
+              title={bookmarked ? "Bookmarked" : "Bookmark"}
+              className={`inline-flex items-center justify-center gap-2 rounded-full border px-3 py-3 text-sm font-medium transition-all cursor-pointer sm:px-5 ${
                 bookmarked
                   ? "border-accent bg-blue-50 text-accent"
                   : "border-black/10 bg-white text-gray-dark hover:border-black/20"
@@ -151,7 +153,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
               >
                 <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
               </svg>
-              <span>{bookmarked ? "Bookmarked" : "Bookmark"}</span>
+              <span className="hidden sm:inline">{bookmarked ? "Bookmarked" : "Bookmark"}</span>
             </button>
           </div>
         </div>
@@ -163,11 +165,11 @@ export default function SeriesHubClient({ series }: { series: Series }) {
       </div>
 
       {/* Tabs */}
-      <div className="mb-10 flex border-b border-black/8 overflow-x-auto no-scrollbar scroll-smooth">
+      <div className="mb-10 flex justify-center border-b-0 overflow-x-auto no-scrollbar scroll-smooth sm:justify-start sm:border-b sm:border-black/8">
         <button
           type="button"
           onClick={() => setActiveTab("overview")}
-          className={`pb-3.5 pr-6 text-sm font-medium transition-colors cursor-pointer shrink-0 ${
+          className={`pb-3.5 pr-6 max-[380px]:pr-3 text-sm font-medium transition-colors cursor-pointer shrink-0 ${
             activeTab === "overview"
               ? "border-b-2 border-accent text-accent font-semibold"
               : "text-gray-mid hover:text-black"
@@ -178,7 +180,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
         <button
           type="button"
           onClick={() => setActiveTab("articles")}
-          className={`pb-3.5 px-6 text-sm font-medium transition-colors cursor-pointer shrink-0 ${
+          className={`pb-3.5 px-6 max-[380px]:px-3 text-sm font-medium transition-colors cursor-pointer shrink-0 ${
             activeTab === "articles"
               ? "border-b-2 border-accent text-accent font-semibold"
               : "text-gray-mid hover:text-black"
@@ -189,7 +191,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
         <button
           type="button"
           onClick={() => setActiveTab("resources")}
-          className={`pb-3.5 px-6 text-sm font-medium transition-colors cursor-pointer shrink-0 ${
+          className={`pb-3.5 px-6 max-[380px]:px-3 text-sm font-medium transition-colors cursor-pointer shrink-0 ${
             activeTab === "resources"
               ? "border-b-2 border-accent text-accent font-semibold"
               : "text-gray-mid hover:text-black"
@@ -297,15 +299,15 @@ export default function SeriesHubClient({ series }: { series: Series }) {
                         <Link
                           key={chapter.slug}
                           href={`/blog/series/${series.slug}/${chapter.slug}`}
-                          className="group relative block overflow-hidden rounded-2xl border border-accent/30 bg-blue-50/70 p-4 sm:p-5 transition-all shadow-[0_8px_20px_rgba(30,45,246,0.08)] hover:border-accent/50 hover:bg-blue-50 min-w-0"
+                          className="group relative block overflow-hidden rounded-2xl border border-accent/20 bg-accent/[0.04] p-3 sm:p-5 transition-all sm:shadow-[0_8px_20px_rgba(30,45,246,0.08)] hover:border-accent/50 hover:bg-blue-50 min-w-0"
                         >
-                          <div className="flex items-start justify-between gap-3 sm:gap-4">
-                            <div className="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                            <div className="flex items-start gap-2.5 sm:gap-3.5 min-w-0">
                               <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-white text-xs font-mono font-bold">
                                 {chapter.number}
                               </div>
                               <div className="space-y-1 min-w-0">
-                                <div className="inline-flex items-center gap-1.5 rounded-full bg-accent/15 px-2.5 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-accent">
+                                <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-accent">
                                   <span>Currently reading</span>
                                 </div>
                                 <h4 className="text-base font-medium text-black sm:text-lg group-hover:text-accent transition-colors break-words">
@@ -318,7 +320,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
                                 )}
                               </div>
                             </div>
-                            <span className="shrink-0 font-mono text-xs text-accent">
+                            <span className="pl-9 font-mono text-[11px] text-gray-mid sm:shrink-0 sm:pl-0 sm:text-xs sm:text-accent">
                               {chapter.readTime}
                             </span>
                           </div>

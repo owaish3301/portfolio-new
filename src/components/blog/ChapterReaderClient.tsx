@@ -149,14 +149,7 @@ server.listen(3000, () => {
 
       {/* Main 3-Column Layout matching reference design */}
       <div className="mx-auto w-[92%] max-w-[1360px] min-w-0">
-        <div className="grid gap-10 xl:grid-cols-[190px_minmax(0,1fr)_310px] lg:grid-cols-[minmax(0,1fr)_310px] items-start min-w-0">
-          
-          {/* Left Column: Sticky "On this page" TOC (Desktop XL) */}
-          <aside className="hidden xl:block min-w-0">
-            <div className="sticky top-28 space-y-6">
-              <TableOfContents headings={chapter.headings || []} />
-            </div>
-          </aside>
+        <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_310px] lg:grid-cols-[minmax(0,1fr)_310px] items-start min-w-0">
 
           {/* Center Column: Main Article Content */}
           <article className="min-w-0 max-w-3xl w-full overflow-hidden">
@@ -543,81 +536,10 @@ export async function executePipeline(req: Request): Promise<Response> {
             </div>
           </article>
 
-          {/* Right Sticky Sidebar: "In this series" card matching reference design */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-28 space-y-6">
-              <div className="rounded-2xl border border-black/8 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                <div className="flex items-center justify-between pb-3 border-b border-black/6">
-                  <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-black">
-                    In this series
-                  </h3>
-                  <span className="font-mono text-[11px] text-gray-mid">
-                    {chapter.number} / {totalChapters}
-                  </span>
-                </div>
-
-                <div className="mt-3 max-h-[calc(100vh-280px)] overflow-y-auto pr-1 space-y-1">
-                  {allChapters.map((ch) => {
-                    const isCurrent = ch.slug === chapter.slug;
-                    const isCompleted = ch.number < chapter.number;
-                    const chapterNumStr = String(ch.number).padStart(2, "0");
-
-                    return (
-                      <Link
-                        key={ch.slug}
-                        href={`/blog/series/${series.slug}/${ch.slug}`}
-                        className={`group flex items-start justify-between gap-3 rounded-xl p-2.5 transition-all ${
-                          isCurrent
-                            ? "bg-accent/8 border border-accent/20"
-                            : "hover:bg-surface-alt/70"
-                        }`}
-                      >
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <span
-                            className={`font-mono text-xs font-medium shrink-0 pt-0.5 ${
-                              isCurrent ? "text-accent font-semibold" : "text-gray-light"
-                            }`}
-                          >
-                            {chapterNumStr}
-                          </span>
-                          <div className="min-w-0">
-                            <p
-                              className={`text-xs leading-snug line-clamp-2 ${
-                                isCurrent
-                                  ? "font-medium text-accent"
-                                  : "text-gray-dark group-hover:text-black"
-                              }`}
-                            >
-                              {ch.title}
-                            </p>
-                            <span className="font-mono text-[11px] text-gray-mid mt-0.5 block">
-                              {ch.readTime}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Status Indicator circle matching reference */}
-                        <div className="shrink-0 pt-0.5">
-                          {isCompleted ? (
-                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black/5 text-gray-dark">
-                              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                            </div>
-                          ) : isCurrent ? (
-                            <div className="flex h-5 w-5 items-center justify-center rounded-full border border-accent bg-accent/15">
-                              <span className="h-2 w-2 rounded-full bg-accent" />
-                            </div>
-                          ) : (
-                            <div className="h-5 w-5 rounded-full border border-black/15" />
-                          )}
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-black/6">
+          {/* Right Sticky Sidebar */}
+          <aside className="hidden self-start lg:sticky lg:top-28 lg:block">
+            <div className="space-y-6">
+                <div className="hidden">
                   <Link
                     href={`/blog/series/${series.slug}`}
                     className="inline-flex w-full items-center justify-center gap-1.5 text-xs font-mono text-gray-mid hover:text-black transition-colors"
@@ -626,10 +548,8 @@ export async function executePipeline(req: Request): Promise<Response> {
                     <span>→</span>
                   </Link>
                 </div>
-              </div>
-
-              {/* On tablet/small-desktop screens (LG but < XL), also show On This Page below the series box */}
-              <div className="xl:hidden rounded-2xl border border-black/8 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+              {/* On tablet/small-desktop screens (LG but < XL), also show On This Page */}
+              <div className="rounded-2xl border border-black/8 bg-white p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
                 <TableOfContents headings={chapter.headings || []} />
               </div>
             </div>
@@ -640,4 +560,3 @@ export async function executePipeline(req: Request): Promise<Response> {
     </div>
   );
 }
-
