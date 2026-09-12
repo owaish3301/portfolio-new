@@ -2,46 +2,22 @@
 
 import Link from "next/link";
 import { BlogPost } from "@/data/blog";
-import CodeBlock from "./CodeBlock";
+import type { ReactNode } from "react";
 import TableOfContents, { MobileTableOfContents } from "./TableOfContents";
 
 interface ArticleReaderProps {
   article: BlogPost;
+  children: ReactNode;
   previousArticle: BlogPost | null;
   nextArticle: BlogPost | null;
 }
 
 export default function ArticleReaderClient({
   article,
+  children,
   previousArticle,
   nextArticle,
 }: ArticleReaderProps) {
-  const sampleGoCode = `package main
-
-import (
-    "net/http"
-    "github.com/labstack/echo/v4"
-    "github.com/labstack/echo/v4/middleware"
-)
-
-func main() {
-    e := echo.New()
-    
-    // Middleware
-    e.Use(middleware.Logger())
-    e.Use(middleware.Recover())
-    
-    // Routes
-    e.GET("/api/v1/health", func(c echo.Context) error {
-        return c.JSON(http.StatusOK, map[string]string{
-            "status": "healthy",
-            "version": "1.0.0",
-        })
-    })
-    
-    e.Logger.Fatal(e.Start(":8080"))
-}`;
-
   return (
     <div className="mx-auto w-[92%] max-w-272 pt-28 pb-20 sm:pt-36">
       {/* Back button */}
@@ -71,7 +47,7 @@ func main() {
               {article.title}
             </h1>
 
-            {article.headline && (
+            {article.description && (
               <p className="text-lg text-gray-mid leading-relaxed sm:text-xl break-words">
                 {article.description}
               </p>
@@ -96,45 +72,7 @@ func main() {
 
           {/* Body Prose */}
           <div className="prose prose-slate max-w-none text-base text-gray-dark leading-relaxed sm:text-[17px] space-y-6 break-words [overflow-wrap:anywhere]">
-            <p>{article.content}</p>
-
-            <h2
-              id="why-go"
-              className="text-2xl sm:text-3xl font-medium tracking-tight text-black pt-6 break-words"
-            >
-              Why Performance Matters
-            </h2>
-
-            <p>
-              When building modern distributed applications, network efficiency and
-              concurrency primitives are vital. Using lightweight goroutines with
-              channels allows thousands of concurrent operations with negligible
-              memory footprint compared to OS threads.
-            </p>
-
-            <CodeBlock
-              code={sampleGoCode}
-              language="go"
-              filename="main.go"
-            />
-
-            <h2
-              id="project-setup"
-              className="text-2xl sm:text-3xl font-medium tracking-tight text-black pt-6 break-words"
-            >
-              Project Structure and Configuration
-            </h2>
-
-            <p>
-              Keeping a tidy project layout ensures your HTTP router, middleware
-              handlers, domain logic, and database repositories remain strictly
-              decoupled.
-            </p>
-
-            <div className="my-6 rounded-2xl border border-blue-200 bg-blue-50/50 p-5 text-sm break-words">
-              <strong className="text-black">Architecture Note:</strong> Always
-              pass contexts (<code className="text-accent font-mono text-xs break-all">context.Context</code>) down your call stack to respect timeout deadlines and client disconnect signals.
-            </div>
+            {children}
           </div>
 
           {/* Bottom Pagination */}

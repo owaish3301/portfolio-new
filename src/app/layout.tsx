@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import PublicAnalytics from "@/components/PublicAnalytics";
 import { siteConfig } from "@/data/siteConfig";
 import "../styles/fonts.css";
 import "../styles/globals.css";
@@ -157,6 +158,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Google Analytics */}
+        <PublicAnalytics>
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-Z552KRBYBG"
@@ -181,6 +183,8 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "xsuttmmgmd");
           `}
         </Script>
+
+        </PublicAnalytics>
 
         {/* JSON-LD Structured Data */}
         <script

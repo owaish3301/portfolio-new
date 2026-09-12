@@ -73,7 +73,10 @@ export default function LatestArticles({ articles }: { articles: BlogPost[] }) {
               href={`/blog/${article.slug}`}
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e4ebf8] bg-white transition-[border-color,transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-accent/30 min-w-0"
             >
-              <ArticlePreviewBanner type={article.coverType} />
+              {article.coverImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={article.coverImage} alt={article.coverAlt} className="h-36 w-full object-cover" loading="lazy" />
+              ) : <ArticlePreviewBanner type={article.coverType} />}
 
               <div className="flex flex-1 flex-col p-5 min-w-0">
                 <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gray-light">

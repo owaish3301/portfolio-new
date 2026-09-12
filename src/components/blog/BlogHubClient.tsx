@@ -11,7 +11,7 @@ export default function BlogHubClient({
   series,
   articles,
 }: {
-  series: Series;
+  series: Series[];
   articles: BlogPost[];
 }) {
   const [selectedTag, setSelectedTag] = useState<FilterTag>("All");
@@ -38,15 +38,10 @@ export default function BlogHubClient({
     });
   }, [articles, selectedTag, searchQuery]);
 
-  const showSeries = useMemo(() => {
-    if (selectedTag === "All" || selectedTag === "Series") return true;
-    if (searchQuery.trim() !== "") {
-      return (
-        series.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        series.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    return false;
+  const filteredSeries = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return series.filter(item => (selectedTag === "All" || selectedTag === "Series") &&
+      (!query || item.title.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)));
   }, [series, selectedTag, searchQuery]);
 
   return (
@@ -58,14 +53,16 @@ export default function BlogHubClient({
         onSearchChange={setSearchQuery}
       />
 
-      {showSeries && <FeaturedSeriesCard series={series} />}
+      <div id="series" className="scroll-mt-28">
+        {filteredSeries.map(item => <FeaturedSeriesCard key={item.slug} series={item} />)}
+      </div>
 
       <LatestArticles articles={filteredArticles} />
 
-      {filteredArticles.length === 0 && (
+      {filteredArticles.length === 0 && filteredSeries.length === 0 && (
         <div className="my-16 rounded-3xl border border-dashed border-black/10 bg-white/50 p-12 text-center">
           <p className="text-gray-mid">
-            No articles found matching &ldquo;{searchQuery || selectedTag}&rdquo;.
+            {articles.length === 0 && series.length === 0 ? "No articles published yet." : <>No articles found matching &ldquo;{searchQuery || selectedTag}&rdquo;.</>}
           </p>
           <button
             type="button"
@@ -80,7 +77,7 @@ export default function BlogHubClient({
         </div>
       )}
 
-      <MoreToExplore />
+      <MoreToExplore onBrowseArticles={() => { setSelectedTag("All"); setSearchQuery(""); }} onBrowseSeries={() => { setSelectedTag("Series"); setSearchQuery(""); }} />
     </div>
   );
 }

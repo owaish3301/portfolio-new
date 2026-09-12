@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useStoredValue } from "@/lib/browser-storage";
 import Link from "next/link";
 import { Series } from "@/data/blog";
 import IsometricServerGraphic from "./IsometricServerGraphic";
@@ -9,28 +10,16 @@ export default function SeriesHubClient({ series }: { series: Series }) {
   const [activeTab, setActiveTab] = useState<"articles" | "overview" | "resources">(
     "articles"
   );
-  const [bookmarked, setBookmarked] = useState(false);
-  const [lastReadSlug, setLastReadSlug] = useState<string>("introduction");
-  const [lastReadNumber, setLastReadNumber] = useState<number>(1);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`series_progress_${series.slug}`);
-      if (saved) {
-        const data = JSON.parse(saved);
-        if (data.chapterSlug) {
-          setLastReadSlug(data.chapterSlug);
-          setLastReadNumber(data.chapterNumber || 1);
-        }
-      }
-      const savedBookmark = localStorage.getItem(`series_bookmark_${series.slug}`);
-      if (savedBookmark) {
-        setBookmarked(savedBookmark === "true");
-      }
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, [series.slug]);
+  const savedBookmark = useStoredValue(`series_bookmark_${series.slug}`);
+  const savedProgress = useStoredValue(`series_progress_${series.slug}`);
+  const [bookmarkOverride, setBookmarked] = useState<boolean | null>(null);
+  const bookmarked = bookmarkOverride ?? savedBookmark === "true";
+  const chapters = series.parts.flatMap(part => part.chapters);
+  let savedReadSlug = "";
+  try { savedReadSlug = JSON.parse(savedProgress || "null")?.chapterSlug || ""; } catch {}
+  const lastRead = chapters.find(chapter => chapter.slug === savedReadSlug) ?? chapters[0];
+  const lastReadSlug = lastRead?.slug;
+  const lastReadNumber = lastRead?.number ?? 1;
 
   const toggleBookmark = () => {
     const nextVal = !bookmarked;
@@ -120,7 +109,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
 
           {/* Actions */}
           <div className="flex flex-wrap items-center gap-3 pt-4">
-            <Link
+            {lastReadSlug && <Link
               href={`/blog/series/${series.slug}/${lastReadSlug}`}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-white shadow-[0_4px_16px_rgba(30,45,246,0.25)] transition-all hover:scale-[0.98] hover:opacity-90 max-w-full text-center"
             >
@@ -130,7 +119,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
                   : "Continue Reading"}
               </span>
               <span className="shrink-0">→</span>
-            </Link>
+            </Link>}
 
             <button
               type="button"
@@ -160,7 +149,10 @@ export default function SeriesHubClient({ series }: { series: Series }) {
 
         {/* Hero Illustration */}
         <div className="overflow-hidden rounded-3xl border border-[#e4ebf8] bg-white p-2 shadow-[0_16px_30px_rgba(20,30,60,0.06)]">
-          <IsometricServerGraphic className="h-64 sm:h-80 w-full" />
+          {series.coverImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={series.coverImage} alt={series.coverAlt} className="h-64 sm:h-80 w-full object-cover" />
+          ) : <IsometricServerGraphic className="h-64 sm:h-80 w-full" />}
         </div>
       </div>
 
@@ -205,16 +197,11 @@ export default function SeriesHubClient({ series }: { series: Series }) {
         <div className="rounded-3xl border border-[#e4ebf8] bg-white p-6 sm:p-8 space-y-4 max-w-3xl min-w-0 break-words">
           <h2 className="text-xl font-medium text-black">About This Series</h2>
           <p className="text-sm leading-relaxed text-gray-mid">
-            Backend development often gets taught as a set of disconnected library
-            APIs. This series takes a step back to build a unified first-principles
-            mental model. From raw sockets, TCP streams, and memory buffers to
-            high-availability database clustering and zero-downtime deployment pipelines.
+            {series.overview}
           </p>
           <h3 className="text-base font-medium text-black pt-4">Who is this for?</h3>
           <p className="text-sm leading-relaxed text-gray-mid">
-            Frontend engineers transitioning to full-stack, junior backend developers
-            seeking deep foundational understanding, or anyone who wants to demystify
-            what happens behind the curtain of modern web architecture.
+            {series.audience || series.description}
           </p>
         </div>
       )}
@@ -223,18 +210,19 @@ export default function SeriesHubClient({ series }: { series: Series }) {
         <div className="rounded-3xl border border-[#e4ebf8] bg-white p-6 sm:p-8 space-y-4 max-w-3xl min-w-0 break-words">
           <h2 className="text-xl font-medium text-black">Series Resources & Code</h2>
           <p className="text-sm text-gray-mid">
-            Accompanying GitHub repository with executable code samples for every chapter:
+            {series.resourcesDescription || (series.resources.length ? "Resources for this series." : "No resources added yet.")}
           </p>
           <div className="pt-2">
-            <a
-              href="https://github.com/owaish3301"
+            {series.resources.map(resource => <a
+              key={resource.url}
+              href={resource.url}
               target="_blank"
               rel="noreferrer"
               className="inline-flex max-w-full items-center gap-2 rounded-full border border-black/10 bg-surface-alt px-4 py-2 text-xs font-mono text-black hover:border-black/30 transition-colors"
             >
-              <span className="truncate">owaish3301/backend-from-first-principles</span>
+              <span className="truncate">{resource.label}</span>
               <span className="shrink-0">↗</span>
-            </a>
+            </a>)}
           </div>
         </div>
       )}
@@ -279,6 +267,7 @@ export default function SeriesHubClient({ series }: { series: Series }) {
 
           {/* Right: Detailed Chapters by Part */}
           <div className="space-y-12 min-w-0">
+            {chapters.length === 0 && <p className="text-sm text-gray-mid">The first chapter is coming soon.</p>}
             {series.parts.map((part) => (
               <section key={part.id} id={part.id} className="space-y-4 min-w-0">
                 <div className="border-b border-black/6 pb-2 min-w-0">

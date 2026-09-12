@@ -86,7 +86,7 @@ export default function CodeBlock({
 
       {/* Code with Line Numbers */}
       <div className="w-full max-w-full overflow-x-auto p-4 leading-relaxed overscroll-x-contain">
-        <pre className="table min-w-full">
+        <table className="table min-w-full">
           <tbody>
             {lines.map((line, i) => (
               <tr key={i} className="hover:bg-white/[0.03]">
@@ -94,12 +94,12 @@ export default function CodeBlock({
                   {i + 1}
                 </td>
                 <td className="code-line whitespace-pre pr-4 font-mono text-slate-200">
-                  {line}
+                  <code>{line}</code>
                 </td>
               </tr>
             ))}
           </tbody>
-        </pre>
+        </table>
       </div>
     </div>
   );

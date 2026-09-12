@@ -18,7 +18,10 @@ export default function FeaturedSeriesCard({ series }: { series: Series }) {
             href={`/blog/series/${series.slug}`}
             className="block overflow-hidden rounded-2xl min-w-0"
           >
-            <IsometricServerGraphic className="h-60 sm:h-72 w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]" />
+            {series.coverImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={series.coverImage} alt={series.coverAlt} className="h-60 sm:h-72 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]" loading="lazy" />
+            ) : <IsometricServerGraphic className="h-60 sm:h-72 w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]" />}
           </Link>
 
           {/* Content */}

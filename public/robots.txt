@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /keystatic
+Disallow: /api/keystatic/
 
 # Sitemap URL
 Sitemap: https://owaish.codes/sitemap.xml

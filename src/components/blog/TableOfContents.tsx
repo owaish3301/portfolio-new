@@ -8,53 +8,22 @@ export interface HeadingItem {
   level: number;
 }
 
+const EMPTY_HEADINGS: HeadingItem[] = [];
+
 interface TOCProps {
   headings?: HeadingItem[];
   seriesSlug?: string;
 }
 
 export default function TableOfContents({ headings: initialHeadings }: TOCProps) {
-  const [headings, setHeadings] = useState<HeadingItem[]>(initialHeadings || []);
-  const [activeId, setActiveId] = useState<string>("");
-
-  // Auto-extract headings from DOM if none provided
-  useEffect(() => {
-    if (initialHeadings && initialHeadings.length > 0) {
-      setHeadings(initialHeadings);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      const article = document.querySelector("article");
-      if (!article) return;
-
-      const elements = article.querySelectorAll("h2[id], h3[id]");
-      const extracted: HeadingItem[] = [];
-      elements.forEach((el) => {
-        if (el.id) {
-          extracted.push({
-            id: el.id,
-            title: el.textContent?.trim() || "",
-            level: el.tagName === "H2" ? 2 : 3,
-          });
-        }
-      });
-
-      if (extracted.length > 0) {
-        setHeadings(extracted);
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [initialHeadings]);
+  const headings = initialHeadings ?? EMPTY_HEADINGS;
+  const [observedId, setActiveId] = useState<string>("");
+  const activeId = headings.some(heading => heading.id === observedId) ? observedId : headings[0]?.id ?? "";
 
   // IntersectionObserver to highlight current active heading
   useEffect(() => {
     if (headings.length === 0) return;
 
-    if (!activeId && headings.length > 0) {
-      setActiveId(headings[0].id);
-    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -76,7 +45,7 @@ export default function TableOfContents({ headings: initialHeadings }: TOCProps)
     });
 
     return () => observer.disconnect();
-  }, [headings, activeId]);
+  }, [headings]);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -132,39 +101,11 @@ export function MobileTableOfContents({
 }: {
   headings?: HeadingItem[];
 }) {
-  const [headings, setHeadings] = useState<HeadingItem[]>(initialHeadings || []);
+  const headings = initialHeadings ?? EMPTY_HEADINGS;
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (initialHeadings && initialHeadings.length > 0) {
-      setHeadings(initialHeadings);
-      return;
-    }
 
-    const timer = setTimeout(() => {
-      const article = document.querySelector("article");
-      if (!article) return;
-
-      const elements = article.querySelectorAll("h2[id], h3[id]");
-      const extracted: HeadingItem[] = [];
-      elements.forEach((el) => {
-        if (el.id) {
-          extracted.push({
-            id: el.id,
-            title: el.textContent?.trim() || "",
-            level: el.tagName === "H2" ? 2 : 3,
-          });
-        }
-      });
-
-      if (extracted.length > 0) {
-        setHeadings(extracted);
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [initialHeadings]);
 
   useEffect(() => {
     if (headings.length === 0) return;

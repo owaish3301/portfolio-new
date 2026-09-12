@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function MoreToExplore() {
+export default function MoreToExplore({ onBrowseArticles, onBrowseSeries }: { onBrowseArticles: () => void; onBrowseSeries: () => void }) {
   return (
     <section className="mb-20">
       <div className="mb-6">
@@ -12,7 +12,8 @@ export default function MoreToExplore() {
       <div className="grid gap-6 sm:grid-cols-2 min-w-0">
         {/* Card 1 */}
         <Link
-          href="/blog#articles"
+          href="/blog#all"
+          onClick={onBrowseArticles}
           className="group flex items-center justify-between rounded-3xl border border-[#e4ebf8] bg-white p-5 sm:p-6 shadow-[0_10px_20px_rgba(20,30,60,0.04)] transition-all duration-300 hover:border-accent/40 hover:shadow-[0_16px_30px_rgba(20,30,60,0.08)] min-w-0 gap-3"
         >
           <div className="flex items-center gap-4 min-w-0">
@@ -34,7 +35,7 @@ export default function MoreToExplore() {
                 Browse all articles
               </h3>
               <p className="text-xs text-gray-mid truncate">
-                Explore everything I've written.
+                Explore everything I&apos;ve written.
               </p>
             </div>
           </div>
@@ -45,7 +46,8 @@ export default function MoreToExplore() {
 
         {/* Card 2 */}
         <Link
-          href="/blog/series/backend-from-first-principles"
+          href="/blog#series"
+          onClick={onBrowseSeries}
           className="group flex items-center justify-between rounded-3xl border border-[#e4ebf8] bg-white p-5 sm:p-6 shadow-[0_10px_20px_rgba(20,30,60,0.04)] transition-all duration-300 hover:border-accent/40 hover:shadow-[0_16px_30px_rgba(20,30,60,0.08)] min-w-0 gap-3"
         >
           <div className="flex items-center gap-4 min-w-0">
