@@ -1,0 +1,30 @@
+title: Computer Networks Simplified
+publication: draft
+description: >
+  Computer Networks Simplified is a series where I document my understanding of
+  networking concepts. If you're learning networking too, you might find these
+  useful. The goal is to explore how computer networks actually work, in a way
+  that's easy to understand and remember.
+subtitle: >-
+  A beginner-friendly guide to how computer networks work, explained through
+  simple mental models and practical examples.
+status: Ongoing
+featured: true
+publishedAt: 2026-09-17
+coverImage: /images/blog/computer-networks-simplified/coverImage.png
+coverAlt: >-
+  > Isometric illustration of computers, servers, and mobile devices connected
+  through a central router.
+overview: >-
+  Computer Networks Simplified is where I document what I learn about networking
+  and explain it in plain language. Each chapter breaks down a concept using
+  simple examples and clear mental models, with the goal of understanding how
+  networks actually work rather than memorizing definitions.
+audience: >-
+  This series is for students, developers, and anyone learning computer
+  networking who wants clear explanations without unnecessary complexity. No
+  prior networking knowledge is required.
+parts:
+  - title: Networking Fundamentals
+resources: []
+seo: {}
